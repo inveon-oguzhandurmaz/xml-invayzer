@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import ttk, filedialog, messagebox, scrolledtext
+from tkinter import ttk, filedialog, messagebox
 import requests
 import xml.etree.ElementTree as ET
 import pandas as pd
@@ -10,7 +10,6 @@ import time
 from datetime import datetime
 from openpyxl import Workbook
 from openpyxl.styles import Font, Alignment, PatternFill
-import concurrent.futures
 import asyncio
 import aiohttp
 import openpyxl
@@ -49,7 +48,6 @@ class XMLAnalyzerApp:
         self.xml_data = None
         self.tags_hierarchy = {}  # Tag hiyerarşisini tutacak sözlük
         self.results = []
-        self.namespaces = {}  # XML namespace'leri tutmak için
         
         # Stil tanımlamaları
         self.style = ttk.Style()
@@ -318,16 +316,6 @@ class XMLAnalyzerApp:
                 if len(root) > 0:
                     root = root[0]  # İlk child'ı root olarak kullan
             
-            # Namespace'leri kaydet
-            self.namespaces = {}
-            for key, value in root.items():
-                if key.startswith("{") or key.startswith("xmlns:"):
-                    ns_parts = key.split("}")
-                    if len(ns_parts) > 1:
-                        ns = ns_parts[0].strip("{")
-                        prefix = key.split(":")[1] if ":" in key else ""
-                        self.namespaces[prefix] = ns
-            
             # Tag hiyerarşisini oluştur
             self.tags_hierarchy = {}
             self._build_tag_hierarchy(root)
@@ -549,8 +537,6 @@ class XMLAnalyzerApp:
         """Belirtilen tag yoluna göre elementleri bul"""
         root = self.xml_data.getroot()
         root_tag = self._get_tag_name(root.tag)
-        
-        results = []
         
         # Base tag root ise doğrudan root'u kullan
         if base_tag == root_tag:
