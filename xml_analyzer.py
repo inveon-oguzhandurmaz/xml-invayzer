@@ -666,7 +666,7 @@ class XMLAnalyzerApp:
         
         # Semaphore ile eşzamanlı istek sayısını sınırla
         # Dengeli performans için optimum değer
-        semaphore = asyncio.Semaphore(200)  # Aynı anda en fazla 200 istek
+        semaphore = asyncio.Semaphore(180)  # Aynı anda en fazla 200 istek
         
         # Yeniden deneme ayarları
         max_retries = 3
@@ -1146,8 +1146,10 @@ class XMLAnalyzerApp:
         self.analysis_total_time = 0
         self.elapsed_time_var.set("00:00:00")
 
-
-if __name__ == "__main__":
+def main():
     root = tk.Tk()
     app = XMLAnalyzerApp(root)
     root.mainloop()
+
+if __name__ == "__main__":
+    main()
